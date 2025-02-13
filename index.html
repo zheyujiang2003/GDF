@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>金魚百家輔助</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            margin: 50px auto;
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #333;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input {
+            width: 80%;
+            padding: 8px;
+            font-size: 18px;
+            margin: 5px;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>金魚百家輔助</h1>
+    
+    <div class="input-group">
+        <label>閒家牌 (請輸入空格分隔):</label>
+        <input type="text" id="playerCards" placeholder="例如: 2 3 5">
+    </div>
+
+    <div class="input-group">
+        <label>莊家牌 (請輸入空格分隔):</label>
+        <input type="text" id="bankerCards" placeholder="例如: 1 6">
+    </div>
+
+    <button onclick="calculateBet()">計算下注建議</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateBet() {
+        // 讀取使用者輸入
+        let playerInput = document.getElementById("playerCards").value.trim();
+        let bankerInput = document.getElementById("bankerCards").value.trim();
+
+        // 解析輸入成數字陣列
+        let playerCards = playerInput.split(" ").map(Number);
+        let bankerCards = bankerInput.split(" ").map(Number);
+
+        // 計算牌值
+        function getCardValue(card) {
+            if ([1, 3, 5, 7, 9].includes(card)) return -1;
+            if ([2, 4, 6, 8, 10].includes(card)) return 1;
+            return 0; // J, Q, K 不計算
+        }
+
+        let playerValue = playerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+        let bankerValue = bankerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+        
+        let totalValue = playerValue + bankerValue;
+        let resultText = "";
+
+        if (totalValue > 0) {
+            resultText = "建議下注 ➜ 莊家";
+        } else if (totalValue < 0) {
+            resultText = "建議下注 ➜ 閒家";
+        } else {
+            resultText = "不下注";
+        }
+
+        // 顯示結果
+        document.getElementById("result").innerText = `計算結果: ${resultText}`;
+    }
+</script>
+
+</body>
+</html>
