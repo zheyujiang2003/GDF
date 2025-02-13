@@ -8,13 +8,10 @@
         @font-face {
             font-family: 'CustomFont';
             src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
-        body, button, select, input {
-            font-family: 'CustomFont', serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; font-family: 'CustomFont', sans-serif; }
+        body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
             color: #333;
             display: flex;
@@ -22,7 +19,6 @@
             align-items: center;
             padding: 20px;
             text-align: center;
-            overflow-x: hidden;
         }
         h1 { font-size: 2.5em; margin-bottom: 5px; color: #333; }
 
@@ -171,6 +167,9 @@
 
         history.push(winner);
         updateHistoryDisplay();
+
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
     }
 
     function updateHistoryDisplay() {
