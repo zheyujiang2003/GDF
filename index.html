@@ -115,55 +115,48 @@
     let totalGames = 0;
 
     function calculateBet() {
-        // 讀取使用者輸入
         let playerInput = document.getElementById("playerCards").value.trim();
         let bankerInput = document.getElementById("bankerCards").value.trim();
 
-        // 驗證輸入是否為數字且長度合適
         if (!/^\d{1,3}$/.test(playerInput) || !/^\d{1,3}$/.test(bankerInput)) {
             document.getElementById("result").innerText = "請輸入有效的數字 (最多三位)";
             return;
         }
 
-        // 解析輸入的數字
         let playerCards = playerInput.split("").map(Number);
         let bankerCards = bankerInput.split("").map(Number);
 
-        // 計算牌值
         function getCardValue(card) {
             if ([1, 3, 5, 7, 9].includes(card)) return -1;
             if ([2, 4, 6, 8, 0].includes(card)) return 1;
             return 0;
         }
 
-        let playerValue = playerCards.reduce((sum, card) => sum + getCardValue(card), 0);
-        let bankerValue = bankerCards.reduce((sum, card) => sum + getCardValue(card), 0);
-        
-        let totalValue = playerValue + bankerValue;
-        let resultText = "";
-        let resultClass = "";
+        let playerSDS = playerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+        let bankerSDS = bankerCards.reduce((sum, card) => sum + getCardValue(card), 0);
+        let totalSDS = playerSDS + bankerSDS;
 
-        if (totalValue > 0) {
-            resultText = "建議下注 ➜ 莊家";
-            resultClass = "banker";
-            bankerWins++;
-        } else if (totalValue < 0) {
-            resultText = "建議下注 ➜ 閒家";
-            resultClass = "player";
+        let betSuggestion = totalSDS > 0 ? "莊家" : totalSDS < 0 ? "閒家" : "不下注";
+
+        let playerPoints = playerCards.reduce((sum, card) => sum + card, 0) % 10;
+        let bankerPoints = bankerCards.reduce((sum, card) => sum + card, 0) % 10;
+
+        let winner = "tie";
+        if (playerPoints > bankerPoints) {
+            winner = "player";
             playerWins++;
-        } else {
-            resultText = "不下注";
-            resultClass = "tie";
+        } else if (playerPoints < bankerPoints) {
+            winner = "banker";
+            bankerWins++;
         }
 
         totalGames++;
-        history.push(resultClass);
+        history.push(winner);
 
         updateStats();
         updateHistory();
-        document.getElementById("result").innerText = `計算結果: ${resultText}`;
+        document.getElementById("result").innerText = `計算結果: 建議下注 ➜ ${betSuggestion}`;
 
-        // 清空輸入框
         document.getElementById("playerCards").value = "";
         document.getElementById("bankerCards").value = "";
     }
