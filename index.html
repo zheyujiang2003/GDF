@@ -1,205 +1,208 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>金魚百家輔助</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
         }
-        .container {
-            margin: 30px auto;
-            width: 90%;
-            max-width: 500px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        }
-        h1 {
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
+        body, button, select {
+            font-family: 'CustomFont', serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            overflow-x: hidden;
         }
-        .input-group {
-            margin: 10px 0;
+        h1 { font-size: 2.5em; margin-bottom: 5px; color: #333; }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            overflow: hidden;
+            align-items: center;
         }
-        input {
-            width: 80%;
-            padding: 8px;
-            font-size: 18px;
-            margin: 5px;
+
+        .panel {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
             text-align: center;
         }
-        button {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 18px;
-            cursor: pointer;
-            border-radius: 5px;
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"] {
             width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+        }
+
+        button, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
             margin-top: 10px;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
-        button:hover {
-            background: #218838;
+
+        .calculate-btn { background-color: #e0e5ec; }
+        .calculate-btn:hover { background-color: #d0d5dc; }
+
+        .clear-btn { background-color: #f3a5a5; }
+        .clear-btn:hover { background-color: #e49595; }
+
+        select {
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 10px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            text-align-last: center;
+            appearance: none;
         }
-        .clear-button {
-            background: #dc3545;
-        }
-        .clear-button:hover {
-            background: #c82333;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 22px;
-            font-weight: bold;
-        }
-        .stats {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .history {
-            margin-top: 20px;
+
+        .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 5px;
+            gap: 1px;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
             width: 100%;
-            max-width: 300px;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 240px;
+            margin: auto;
         }
-        .history div {
-            width: 40px;
-            height: 40px;
+
+        .grid-item {
             display: flex;
-            align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: bold;
+            align-items: center;
+            font-size: 1em;
             color: white;
+            height: 40px;
+            border-radius: 50%;
         }
-        .banker { background-color: red; } /* 莊家（紅底白字） */
-        .player { background-color: blue; } /* 閒家（藍底白字） */
-        .tie { background-color: green; } /* 和局（綠底白字） */
+        .zhuang { background-color: red; }
+        .xian { background-color: blue; }
+        .heju { background-color: green; }
     </style>
 </head>
 <body>
 
+<h1>金魚百家輔助</h1>
+
 <div class="container">
-    <h1>金魚百家輔助</h1>
-    
-    <div class="input-group">
-        <label>閒家牌 (輸入三個數字):</label>
-        <input type="text" id="playerCards" placeholder="例如: 235" maxlength="3">
+    <div class="panel">
+        <h2>輸入區</h2>
+        <div class="input-group">
+            <label for="player">閒家牌（依序輸入三張數字）：</label>
+            <input type="text" id="player" maxlength="3" placeholder="例如：789">
+        </div>
+        <div class="input-group">
+            <label for="banker">莊家牌（依序輸入三張數字）：</label>
+            <input type="text" id="banker" maxlength="3" placeholder="例如：345">
+        </div>
+        <button class="calculate-btn" onclick="calculateResult()">計算結果</button>
+        <button class="clear-btn" onclick="clearAll()">清除快取</button>
     </div>
 
-    <div class="input-group">
-        <label>莊家牌 (輸入三個數字):</label>
-        <input type="text" id="bankerCards" placeholder="例如: 16" maxlength="3">
+    <div class="panel">
+        <h2>公式選擇</h2>
+        <select id="formulaSelect" onchange="checkFormula()">
+            <option value="AP">AP 權重公式</option>
+            <option value="ThreePoint">三點叉公式</option>
+            <option value="Size">大小牌公式</option>
+            <option value="PointDifference">點差公式</option>
+            <option value="TimoExclusive">Timo 獨家公式（Beta）</option>
+            <option value="SDS">SDS 公式</option>
+        </select>
+
+        <div class="prediction-result">
+            <h3>推薦下注</h3>
+            <div id="predictionResult">等待輸入...</div>
+        </div>
+        <div class="grid-container" id="historyDisplay"></div>
     </div>
-
-    <button onclick="calculateBet()">計算下注建議</button>
-    <button class="clear-button" onclick="clearCache()">清除快取</button>
-
-    <div class="result" id="result"></div>
-
-    <div class="stats">
-        莊家勝率: <span id="bankerWinRate">0%</span> | 閒家勝率: <span id="playerWinRate">0%</span>
-    </div>
-
-    <div class="history" id="historyGrid"></div>
 </div>
 
 <script>
     let history = [];
-    let bankerWins = 0;
-    let playerWins = 0;
-    let totalGames = 0;
 
-    function calculateBet() {
-        let playerInput = document.getElementById("playerCards").value.trim();
-        let bankerInput = document.getElementById("bankerCards").value.trim();
+    function calculateResult() {
+        let selectedFormula = document.getElementById("formulaSelect").value;
+        let playerInput = document.getElementById('player').value.trim();
+        let bankerInput = document.getElementById('banker').value.trim();
 
         if (!/^\d{1,3}$/.test(playerInput) || !/^\d{1,3}$/.test(bankerInput)) {
-            document.getElementById("result").innerText = "請輸入有效的數字 (最多三位)";
+            alert("請輸入有效的三個數字");
             return;
         }
 
-        let playerCards = playerInput.split("").map(Number);
-        let bankerCards = bankerInput.split("").map(Number);
-
-        function getCardValue(card) {
-            if ([1, 3, 5, 7, 9].includes(card)) return -1;
-            if ([2, 4, 6, 8, 0].includes(card)) return 1;
-            return 0;
-        }
-
-        let playerSDS = playerCards.reduce((sum, card) => sum + getCardValue(card), 0);
-        let bankerSDS = bankerCards.reduce((sum, card) => sum + getCardValue(card), 0);
-        let totalSDS = playerSDS + bankerSDS;
-
-        let betSuggestion = totalSDS > 0 ? "莊家" : totalSDS < 0 ? "閒家" : "不下注";
-
-        let playerPoints = playerCards.reduce((sum, card) => sum + card, 0) % 10;
-        let bankerPoints = bankerCards.reduce((sum, card) => sum + card, 0) % 10;
-
-        let winner = "tie";
-        if (playerPoints > bankerPoints) {
-            winner = "player";
-            playerWins++;
-        } else if (playerPoints < bankerPoints) {
-            winner = "banker";
-            bankerWins++;
-        }
-
-        totalGames++;
-        history.push(winner);
-
-        updateStats();
-        updateHistory();
-        document.getElementById("result").innerText = `計算結果: 建議下注 ➜ ${betSuggestion}`;
-
-        document.getElementById("playerCards").value = "";
-        document.getElementById("bankerCards").value = "";
-    }
-
-    function updateStats() {
-        let bankerRate = totalGames > 0 ? ((bankerWins / totalGames) * 100).toFixed(1) + "%" : "0%";
-        let playerRate = totalGames > 0 ? ((playerWins / totalGames) * 100).toFixed(1) + "%" : "0%";
-
-        document.getElementById("bankerWinRate").innerText = bankerRate;
-        document.getElementById("playerWinRate").innerText = playerRate;
-    }
-
-    function updateHistory() {
-        let historyGrid = document.getElementById("historyGrid");
-        historyGrid.innerHTML = "";
-
-        history.slice(-36).forEach(record => {
-            let div = document.createElement("div");
-            div.className = record;
-            div.innerText = record === "banker" ? "莊" : record === "player" ? "閒" : "和";
-            historyGrid.appendChild(div);
-        });
-    }
-
-    function clearCache() {
-        history = [];
-        bankerWins = 0;
-        playerWins = 0;
-        totalGames = 0;
+        let prediction = selectedFormula === "SDS" ? calculateSDS(playerInput, bankerInput) : "其他公式計算中...";
         
-        document.getElementById("bankerWinRate").innerText = "0%";
-        document.getElementById("playerWinRate").innerText = "0%";
-        document.getElementById("result").innerText = "";
-        document.getElementById("historyGrid").innerHTML = "";
-        document.getElementById("playerCards").value = "";
-        document.getElementById("bankerCards").value = "";
+        let playerPoints = playerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
+        let bankerPoints = bankerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
+        let winner = playerPoints > bankerPoints ? "xian" : bankerPoints > playerPoints ? "zhuang" : "heju";
+
+        history.push(winner);
+        updateHistoryDisplay();
+        document.getElementById("predictionResult").innerText = prediction;
+
+        document.getElementById("player").value = "";
+        document.getElementById("banker").value = "";
+    }
+
+    function calculateSDS(playerInput, bankerInput) {
+        function getCardValue(card) {
+            return [1, 3, 5, 7, 9].includes(parseInt(card)) ? -1 : [2, 4, 6, 8, 0].includes(parseInt(card)) ? 1 : 0;
+        }
+
+        let totalSDS = playerInput.split("").reduce((sum, card) => sum + getCardValue(card), 0) +
+                       bankerInput.split("").reduce((sum, card) => sum + getCardValue(card), 0);
+
+        return totalSDS > 0 ? "推薦下注莊" : totalSDS < 0 ? "推薦下注閒" : "不下注";
     }
 </script>
 
