@@ -51,34 +51,35 @@
             font-size: 22px;
             font-weight: bold;
         }
-        .history {
-            margin-top: 20px;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            border-radius: 5px;
-            background: #fff;
-        }
-        .history h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .history-list {
-            list-style: none;
-            padding: 0;
-        }
-        .history-list li {
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            font-size: 16px;
-        }
         .stats {
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
         }
+        .history {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .history div {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        .banker { background-color: red; } /* 莊家（紅底白字） */
+        .player { background-color: blue; } /* 閒家（藍底白字） */
+        .tie { background-color: green; } /* 和局（綠底白字） */
     </style>
 </head>
 <body>
@@ -104,10 +105,7 @@
         莊家勝率: <span id="bankerWinRate">0%</span> | 閒家勝率: <span id="playerWinRate">0%</span>
     </div>
 
-    <div class="history">
-        <h2>歷史記錄</h2>
-        <ul class="history-list" id="historyList"></ul>
-    </div>
+    <div class="history" id="historyGrid"></div>
 </div>
 
 <script>
@@ -143,23 +141,31 @@
         
         let totalValue = playerValue + bankerValue;
         let resultText = "";
+        let resultClass = "";
 
         if (totalValue > 0) {
             resultText = "建議下注 ➜ 莊家";
+            resultClass = "banker";
             bankerWins++;
         } else if (totalValue < 0) {
             resultText = "建議下注 ➜ 閒家";
+            resultClass = "player";
             playerWins++;
         } else {
             resultText = "不下注";
+            resultClass = "tie";
         }
 
         totalGames++;
-        history.push(`閒家: ${playerInput} | 莊家: ${bankerInput} ➜ ${resultText}`);
+        history.push(resultClass);
 
         updateStats();
         updateHistory();
         document.getElementById("result").innerText = `計算結果: ${resultText}`;
+
+        // 清空輸入框
+        document.getElementById("playerCards").value = "";
+        document.getElementById("bankerCards").value = "";
     }
 
     function updateStats() {
@@ -171,12 +177,14 @@
     }
 
     function updateHistory() {
-        let historyList = document.getElementById("historyList");
-        historyList.innerHTML = "";
-        history.slice().reverse().forEach(record => {
-            let li = document.createElement("li");
-            li.innerText = record;
-            historyList.appendChild(li);
+        let historyGrid = document.getElementById("historyGrid");
+        historyGrid.innerHTML = "";
+
+        history.slice(-36).forEach(record => {
+            let div = document.createElement("div");
+            div.className = record;
+            div.innerText = record === "banker" ? "莊" : record === "player" ? "閒" : "和";
+            historyGrid.appendChild(div);
         });
     }
 </script>
