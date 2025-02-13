@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>金魚百家輔助 - SDS 版本</title>
+    <title>金魚百家SDS輔助</title>
     <style>
         @font-face {
             font-family: 'CustomFont';
@@ -13,7 +13,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
-        body, button, select, input, h1, label, .grid-item {
+        body {
             font-family: 'CustomFont', sans-serif !important;
             background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
             color: #333;
@@ -23,7 +23,7 @@
             padding: 20px;
             text-align: center;
         }
-        h1 { font-size: 2.5em; margin-bottom: 5px; color: #333; }
+        h1 { font-size: 2em; margin-bottom: 5px; color: #333; }
 
         .container {
             display: flex;
@@ -34,7 +34,7 @@
             background: #fff;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            padding: 25px;
+            padding: 20px;
             align-items: center;
         }
 
@@ -47,6 +47,46 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            background-color: #e0e5ec;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        button:hover { background-color: #d0d5dc; }
+
+        .clear-btn { background-color: #f3a5a5; }
+        .clear-btn:hover { background-color: #e49595; }
 
         .grid-container {
             display: grid;
@@ -76,11 +116,21 @@
         .zhuang { background-color: red; }
         .xian { background-color: blue; }
         .heju { background-color: green; }
+
+        /* RWD */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .container { width: 90%; padding: 15px; }
+            .panel { padding: 10px; }
+            button { padding: 10px; font-size: 1em; }
+            .grid-container { max-width: 200px; }
+            .grid-item { height: 35px; width: 35px; font-size: 0.9em; }
+        }
     </style>
 </head>
 <body>
 
-<h1>金魚百家輔助 - SDS 版本</h1>
+<h1>金魚百家SDS輔助</h1>
 
 <div class="container">
     <div class="panel">
@@ -96,9 +146,16 @@
         <button onclick="calculateSDS()">計算 SDS 下注建議</button>
         <button class="clear-btn" onclick="clearAll()">清除快取</button>
     </div>
+
+    <div class="panel">
+        <h2>歷史記錄</h2>
+        <div class="grid-container" id="historyDisplay"></div>
+    </div>
 </div>
 
 <script>
+    let history = [];
+
     function calculateSDS() {
         let playerInput = document.getElementById('player').value.trim();
         let bankerInput = document.getElementById('banker').value.trim();
@@ -117,13 +174,37 @@
 
         let prediction = totalSDS > 0 ? "推薦下注莊" : totalSDS < 0 ? "推薦下注閒" : "不下注";
 
+        let playerPoints = playerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
+        let bankerPoints = bankerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
+        let winner = playerPoints > bankerPoints ? "xian" : bankerPoints > playerPoints ? "zhuang" : "heju";
+
+        history.push(winner);
+        updateHistoryDisplay();
+
         document.getElementById("player").value = "";
         document.getElementById("banker").value = "";
     }
 
+    function updateHistoryDisplay() {
+        let historyGrid = document.getElementById("historyDisplay");
+        historyGrid.innerHTML = "";
+
+        for (let i = 0; i < 36; i++) {
+            let div = document.createElement("div");
+            div.classList.add("grid-item");
+
+            if (history[i]) {
+                div.classList.add(history[i]);
+                div.innerText = history[i] === "zhuang" ? "莊" : history[i] === "xian" ? "閒" : "和";
+            }
+
+            historyGrid.appendChild(div);
+        }
+    }
+
     function clearAll() {
-        document.getElementById("player").value = "";
-        document.getElementById("banker").value = "";
+        history = [];
+        document.getElementById("historyDisplay").innerHTML = "";
     }
 </script>
 
