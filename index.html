@@ -10,8 +10,9 @@
             src: url('https://zheyujiang2003.github.io/Timo/Custom.ttf') format('truetype');
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; font-family: 'CustomFont', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body {
+            font-family: 'CustomFont', sans-serif;
             background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
             color: #333;
             display: flex;
@@ -176,16 +177,26 @@
         let historyGrid = document.getElementById("historyDisplay");
         historyGrid.innerHTML = "";
 
-        for (let i = 0; i < 36; i++) {
-            let div = document.createElement("div");
-            div.classList.add("grid-item");
+        let historyMatrix = Array(6).fill(null).map(() => Array(6).fill(null));
+        history.forEach((result, index) => {
+            let row = index % 6;
+            let col = Math.floor(index / 6);
+            historyMatrix[row][col] = result;
+        });
 
-            if (history[i]) {
-                div.classList.add(history[i]);
-                div.innerText = history[i] === "zhuang" ? "莊" : history[i] === "xian" ? "閒" : "和";
+        for (let row = 0; row < 6; row++) {
+            for (let col = 0; col < 6; col++) {
+                let div = document.createElement("div");
+                div.classList.add("grid-item");
+
+                if (historyMatrix[row][col]) {
+                    div.classList.add(historyMatrix[row][col]);
+                    div.innerText = historyMatrix[row][col] === "zhuang" ? "莊" :
+                                    historyMatrix[row][col] === "xian" ? "閒" : "和";
+                }
+
+                historyGrid.appendChild(div);
             }
-
-            historyGrid.appendChild(div);
         }
     }
 
