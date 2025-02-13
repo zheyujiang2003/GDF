@@ -46,6 +46,12 @@
         button:hover {
             background: #218838;
         }
+        .clear-button {
+            background: #dc3545;
+        }
+        .clear-button:hover {
+            background: #c82333;
+        }
         .result {
             margin-top: 20px;
             font-size: 22px;
@@ -98,6 +104,7 @@
     </div>
 
     <button onclick="calculateBet()">計算下注建議</button>
+    <button class="clear-button" onclick="clearCache()">清除快取</button>
 
     <div class="result" id="result"></div>
 
@@ -179,6 +186,20 @@
             div.innerText = record === "banker" ? "莊" : record === "player" ? "閒" : "和";
             historyGrid.appendChild(div);
         });
+    }
+
+    function clearCache() {
+        history = [];
+        bankerWins = 0;
+        playerWins = 0;
+        totalGames = 0;
+        
+        document.getElementById("bankerWinRate").innerText = "0%";
+        document.getElementById("playerWinRate").innerText = "0%";
+        document.getElementById("result").innerText = "";
+        document.getElementById("historyGrid").innerHTML = "";
+        document.getElementById("playerCards").value = "";
+        document.getElementById("bankerCards").value = "";
     }
 </script>
 
