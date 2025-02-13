@@ -234,9 +234,7 @@
             let zCount = history.filter(x => x === "zhuang").length;
             let xCount = history.filter(x => x === "xian").length;
             let total = zCount + xCount;
-            let zRate = ((zCount / total) * 100).toFixed(1);
-            let xRate = ((xCount / total) * 100).toFixed(1);
-            document.getElementById("predictionResult").innerText = `莊: ${zRate}% 閒: ${xRate}%`;
+            document.getElementById("predictionResult").innerText = `莊: ${(zCount / total * 100).toFixed(1)}% 閒: ${(xCount / total * 100).toFixed(1)}%`;
         }
     }
 
