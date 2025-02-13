@@ -15,7 +15,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body {
             font-family: 'CustomFont', sans-serif !important;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e0e5ec 100%);
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             color: #333;
             display: flex;
             flex-direction: column;
@@ -23,7 +23,7 @@
             padding: 20px;
             text-align: center;
         }
-        h1 { font-size: 2em; margin-bottom: 5px; color: #333; }
+        h1 { font-size: 2.2em; margin-bottom: 10px; color: #ff5722; }
 
         .container {
             display: flex;
@@ -36,17 +36,55 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
             padding: 20px;
             align-items: center;
+            transition: 0.3s ease-in-out;
         }
 
         .panel {
             width: 100%;
             padding: 15px;
-            background-color: #ffffff;
+            background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             text-align: center;
+            transition: transform 0.3s ease-in-out;
         }
+
+        .panel:hover {
+            transform: scale(1.02);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            border: 3px solid #ff7043;
+            width: 100%;
+            max-width: 300px;
+            margin: auto;
+        }
+
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: 0.3s;
+        }
+
+        .zhuang { background-color: red; }
+        .xian { background-color: blue; }
+        .heju { background-color: green; }
 
         .input-group {
             margin-bottom: 15px;
@@ -64,7 +102,7 @@
             width: 100%;
             padding: 10px;
             font-size: 1em;
-            border: 1px solid #ddd;
+            border: 2px solid #ff7043;
             border-radius: 8px;
             outline: none;
             text-align: center;
@@ -74,48 +112,19 @@
             width: 100%;
             padding: 12px;
             font-size: 1.1em;
-            color: #333;
+            color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
-            background-color: #e0e5ec;
+            background: linear-gradient(135deg, #ff7043, #ff5722);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
-        button:hover { background-color: #d0d5dc; }
+        button:hover { background: linear-gradient(135deg, #ff5722, #e64a19); }
 
-        .clear-btn { background-color: #f3a5a5; }
-        .clear-btn:hover { background-color: #e49595; }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 3px;
-            padding: 5px;
-            border-radius: 5px;
-            background-color: #fafafa;
-            border: 1px solid #ddd;
-            width: 100%;
-            max-width: 240px;
-            margin: auto;
-        }
-
-        .grid-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1em;
-            font-weight: bold;
-            color: white;
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-        }
-        .zhuang { background-color: red; }
-        .xian { background-color: blue; }
-        .heju { background-color: green; }
+        .clear-btn { background: linear-gradient(135deg, #e57373, #d32f2f); }
+        .clear-btn:hover { background: linear-gradient(135deg, #d32f2f, #b71c1c); }
 
         /* RWD */
         @media (max-width: 768px) {
@@ -123,8 +132,8 @@
             .container { width: 90%; padding: 15px; }
             .panel { padding: 10px; }
             button { padding: 10px; font-size: 1em; }
-            .grid-container { max-width: 200px; }
-            .grid-item { height: 35px; width: 35px; font-size: 0.9em; }
+            .grid-container { max-width: 250px; }
+            .grid-item { height: 40px; width: 40px; font-size: 1em; }
         }
     </style>
 </head>
@@ -156,6 +165,16 @@
 <script>
     let history = [];
 
+    function createEmptyBoard() {
+        let historyGrid = document.getElementById("historyDisplay");
+        historyGrid.innerHTML = "";
+        for (let i = 0; i < 36; i++) {
+            let div = document.createElement("div");
+            div.classList.add("grid-item");
+            historyGrid.appendChild(div);
+        }
+    }
+
     function calculateSDS() {
         let playerInput = document.getElementById('player').value.trim();
         let bankerInput = document.getElementById('banker').value.trim();
@@ -165,19 +184,12 @@
             return;
         }
 
-        function getCardValue(card) {
-            return [1, 3, 5, 7, 9].includes(parseInt(card)) ? -1 : [2, 4, 6, 8, 0].includes(parseInt(card)) ? 1 : 0;
-        }
+        let totalSDS = [...playerInput, ...bankerInput].reduce((sum, card) => {
+            let value = parseInt(card);
+            return sum + ([1, 3, 5, 7, 9].includes(value) ? -1 : 1);
+        }, 0);
 
-        let totalSDS = playerInput.split("").reduce((sum, card) => sum + getCardValue(card), 0) +
-                       bankerInput.split("").reduce((sum, card) => sum + getCardValue(card), 0);
-
-        let prediction = totalSDS > 0 ? "推薦下注莊" : totalSDS < 0 ? "推薦下注閒" : "不下注";
-
-        let playerPoints = playerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
-        let bankerPoints = bankerInput.split("").reduce((sum, card) => sum + parseInt(card), 0) % 10;
-        let winner = playerPoints > bankerPoints ? "xian" : bankerPoints > playerPoints ? "zhuang" : "heju";
-
+        let winner = totalSDS > 0 ? "zhuang" : totalSDS < 0 ? "xian" : "heju";
         history.push(winner);
         updateHistoryDisplay();
 
@@ -187,25 +199,19 @@
 
     function updateHistoryDisplay() {
         let historyGrid = document.getElementById("historyDisplay");
-        historyGrid.innerHTML = "";
-
-        for (let i = 0; i < 36; i++) {
-            let div = document.createElement("div");
-            div.classList.add("grid-item");
-
-            if (history[i]) {
-                div.classList.add(history[i]);
-                div.innerText = history[i] === "zhuang" ? "莊" : history[i] === "xian" ? "閒" : "和";
-            }
-
-            historyGrid.appendChild(div);
-        }
+        let items = historyGrid.children;
+        history.forEach((result, index) => {
+            items[index].classList.add(result);
+            items[index].innerText = result === "zhuang" ? "莊" : result === "xian" ? "閒" : "和";
+        });
     }
 
     function clearAll() {
         history = [];
-        document.getElementById("historyDisplay").innerHTML = "";
+        createEmptyBoard();
     }
+
+    createEmptyBoard();
 </script>
 
 </body>
