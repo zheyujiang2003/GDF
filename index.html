@@ -92,7 +92,8 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 1px;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 3px;
             padding: 5px;
             border-radius: 5px;
             background-color: #fafafa;
@@ -107,8 +108,10 @@
             justify-content: center;
             align-items: center;
             font-size: 1em;
+            font-weight: bold;
             color: white;
             height: 40px;
+            width: 40px;
             border-radius: 50%;
         }
         .zhuang { background-color: red; }
@@ -136,11 +139,7 @@
     </div>
 
     <div class="panel">
-        <h2>AI分析</h2>
-        <div class="prediction-result">
-            <h3>推薦下注</h3>
-            <div id="predictionResult">等待輸入...</div>
-        </div>
+        <h2>歷史記錄</h2>
         <div class="grid-container" id="historyDisplay"></div>
     </div>
 </div>
@@ -172,20 +171,27 @@
 
         history.push(winner);
         updateHistoryDisplay();
-        document.getElementById("predictionResult").innerText = prediction;
-
-        document.getElementById("player").value = "";
-        document.getElementById("banker").value = "";
     }
 
     function updateHistoryDisplay() {
         let historyGrid = document.getElementById("historyDisplay");
-        historyGrid.innerHTML = history.slice(-36).map(result => `<div class="grid-item ${result}">${result === "zhuang" ? "莊" : result === "xian" ? "閒" : "和"}</div>`).join("");
+        historyGrid.innerHTML = "";
+
+        for (let i = 0; i < 36; i++) {
+            let div = document.createElement("div");
+            div.classList.add("grid-item");
+
+            if (history[i]) {
+                div.classList.add(history[i]);
+                div.innerText = history[i] === "zhuang" ? "莊" : history[i] === "xian" ? "閒" : "和";
+            }
+
+            historyGrid.appendChild(div);
+        }
     }
 
     function clearAll() {
         history = [];
-        document.getElementById("predictionResult").innerText = "等待輸入...";
         document.getElementById("historyDisplay").innerHTML = "";
     }
 </script>
