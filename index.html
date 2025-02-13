@@ -166,7 +166,7 @@
         <button onclick="calculateSDS()">計算 SDS 下注建議</button>
         <button class="clear-btn" onclick="clearAll()">清除快取</button>
 
-        <div class="prediction-result" id="predictionResult">等待輸入...</div>
+        <div class="prediction-result" id="predictionResult">還需輸入 5 局後開始預測</div>
     </div>
 
     <div class="panel">
@@ -177,6 +177,16 @@
 
 <script>
     let history = [];
+
+    function createEmptyBoard() {
+        let historyGrid = document.getElementById("historyDisplay");
+        historyGrid.innerHTML = "";
+        for (let i = 0; i < 36; i++) {
+            let div = document.createElement("div");
+            div.classList.add("grid-item");
+            historyGrid.appendChild(div);
+        }
+    }
 
     function calculateSDS() {
         let validChars = "123456789XJQK";
@@ -196,15 +206,19 @@
 
         let result = score > 0 ? "zhuang" : score < 0 ? "xian" : "heju";
         history.push(result);
-        document.getElementById("predictionResult").innerText = `推薦下注: ${result === "zhuang" ? "莊" : result === "xian" ? "閒" : "不下注"}`;
-        document.getElementById("player").value = "";
-        document.getElementById("banker").value = "";
+        updateHistoryDisplay();
+
+        let remaining = 5 - history.length;
+        document.getElementById("predictionResult").innerText = history.length < 5 ? `還需輸入 ${remaining} 局後開始預測` : `推薦下注: ${result === "zhuang" ? "莊" : result === "xian" ? "閒" : "不下注"}`;
     }
 
     function clearAll() {
         history = [];
-        document.getElementById("predictionResult").innerText = "等待輸入...";
+        createEmptyBoard();
+        document.getElementById("predictionResult").innerText = "還需輸入 5 局後開始預測";
     }
+
+    createEmptyBoard();
 </script>
 
 </body>
