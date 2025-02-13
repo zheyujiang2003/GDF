@@ -12,48 +12,37 @@
             font-style: normal;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-weight: normal;
-            font-family: 'CustomFont', sans-serif !important;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-weight: normal; }
         body {
+            font-family: 'CustomFont', sans-serif !important;
             background: linear-gradient(135deg, #ffccd5 0%, #ff8fab 100%);
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 30px 20px;
+            padding: 20px;
             text-align: center;
         }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #ff4081;
-        }
+        h1 { font-size: 2.2em; margin-bottom: 10px; color: #ff4081; }
 
         .container {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 20px;
             width: 100%;
-            max-width: 700px;
+            max-width: 600px;
             background: #fff;
-            border-radius: 20px;
+            border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            padding: 30px;
+            padding: 20px;
             align-items: center;
         }
 
         .panel {
             width: 100%;
-            padding: 20px;
+            padding: 15px;
             background: #ffffff;
-            border-radius: 15px;
+            border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             text-align: center;
@@ -63,14 +52,13 @@
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             grid-template-rows: repeat(6, 1fr);
-            gap: 2px;
+            gap: 1px;
             padding: 10px;
             border-radius: 10px;
             background: #fff;
             border: 3px solid #ff4081;
             width: 100%;
-            max-width: 260px;
-            height: 260px;
+            max-width: 290px;
             margin: auto;
         }
 
@@ -78,13 +66,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: bold;
             color: white;
+            height: 45px;
+            width: 45px;
             background: #ffffff;
-            border: 2px solid #ddd;
-            width: 100%;
-            height: 100%;
+            border: 1px solid #ddd;
             transition: 0.3s;
         }
 
@@ -93,82 +81,53 @@
         .heju { background-color: green; }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
         label {
-            font-size: 1.3em;
+            font-size: 1.1em;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             display: block;
         }
 
         input[type="text"] {
-            width: 95%;
-            padding: 12px;
-            font-size: 1.2em;
+            width: 90%;
+            padding: 10px;
+            font-size: 1em;
             border: 2px solid #ff4081;
-            border-radius: 10px;
+            border-radius: 8px;
             outline: none;
             text-align: center;
         }
 
         button {
-            width: 95%;
-            padding: 14px;
-            font-size: 1.3em;
+            width: 90%;
+            padding: 12px;
+            font-size: 1.1em;
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 15px;
+            margin-top: 10px;
             background: linear-gradient(135deg, #ff80ab, #ff4081);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
+        button:hover { background: linear-gradient(135deg, #ff4081, #d81b60); }
 
-        button:hover {
-            background: linear-gradient(135deg, #ff4081, #d81b60);
-        }
-
-        .clear-btn {
-            background: linear-gradient(135deg, #e57373, #d32f2f);
-        }
-
-        .clear-btn:hover {
-            background: linear-gradient(135deg, #d32f2f, #b71c1c);
-        }
+        .clear-btn { background: linear-gradient(135deg, #e57373, #d32f2f); }
+        .clear-btn:hover { background: linear-gradient(135deg, #d32f2f, #b71c1c); }
 
         /* RWD */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-
-            .container {
-                width: 100%;
-                padding: 25px;
-            }
-
-            .panel {
-                padding: 15px;
-            }
-
-            button {
-                padding: 12px;
-                font-size: 1.2em;
-                width: 100%;
-            }
-
-            .grid-container {
-                max-width: 240px;
-                height: 240px;
-            }
-
-            .grid-item {
-                font-size: 1.3em;
-            }
+            h1 { font-size: 1.8em; }
+            .container { width: 95%; padding: 15px; }
+            .panel { padding: 10px; }
+            button { padding: 10px; font-size: 1em; width: 95%; }
+            .grid-container { max-width: 270px; }
+            .grid-item { height: 40px; width: 40px; font-size: 1em; }
         }
     </style>
 </head>
