@@ -1,224 +1,112 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>金魚百家SDS輔助</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDS牌值百家樂輔助程式</title>
     <style>
-        @font-face {
-            font-family: 'CustomFont';
-            src: url('https://zheyujiang2003.github.io/GDF/Custom.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-weight: normal;
-            font-family: 'CustomFont', sans-serif !important;
-        }
-
         body {
-            background: linear-gradient(135deg, #ffccd5 0%, #ff8fab 100%);
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 20px;
+            font-family: Arial, sans-serif;
             text-align: center;
+            margin-top: 50px;
         }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #ff4081;
-        }
-
         .container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 100%;
-            max-width: 700px;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            padding: 30px;
-            align-items: center;
-        }
-
-        .panel {
-            width: 100%;
+            display: inline-block;
             padding: 20px;
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
         }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 2px;
+        input, button {
+            margin: 10px;
             padding: 10px;
-            border-radius: 10px;
-            background: #fff;
-            border: 3px solid #ff4081;
-            width: 100%;
-            max-width: 260px;
-            height: 260px;
-            margin: auto;
+            font-size: 16px;
         }
-
-        .grid-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: white;
-            background: #ffffff;
-            border: 2px solid #ddd;
-            width: 100%;
-            height: 100%;
-            transition: 0.3s;
-        }
-
-        .zhuang { background-color: red; }
-        .xian { background-color: blue; }
-        .heju { background-color: green; }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        label {
-            font-size: 1.3em;
-            color: #333;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        input[type="text"] {
-            width: 95%;
-            padding: 12px;
-            font-size: 1.2em;
-            border: 2px solid #ff4081;
-            border-radius: 10px;
-            outline: none;
-            text-align: center;
-        }
-
-        button {
-            width: 95%;
-            padding: 14px;
-            font-size: 1.3em;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            background: linear-gradient(135deg, #ff80ab, #ff4081);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        button:hover {
-            background: linear-gradient(135deg, #ff4081, #d81b60);
-        }
-
-        .clear-btn {
-            background: linear-gradient(135deg, #e57373, #d32f2f);
-        }
-
-        .clear-btn:hover {
-            background: linear-gradient(135deg, #d32f2f, #b71c1c);
-        }
-
-        .prediction-result {
-            font-size: 1.4em;
-            margin-top: 15px;
-            color: #ff4081;
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<h1>金魚百家SDS輔助</h1>
-
 <div class="container">
-    <div class="panel">
-        <h2>輸入區</h2>
-        <div class="input-group">
-            <label for="player">閒家牌（依序輸入三張數字）：</label>
-            <input type="text" id="player" maxlength="3" placeholder="例如：789">
-        </div>
-        <div class="input-group">
-            <label for="banker">莊家牌（依序輸入三張數字）：</label>
-            <input type="text" id="banker" maxlength="3" placeholder="例如：345">
-        </div>
-        <button onclick="calculateSDS()">計算 SDS 下注建議</button>
-        <button class="clear-btn" onclick="clearAll()">清除快取</button>
+    <h1>SDS牌值百家樂輔助程式</h1>
+    <label for="playerCards">閒家牌（例如：18 或 12X）：</label>
+    <input type="text" id="playerCards" placeholder="輸入閒家牌" maxlength="3"><br>
 
-        <div class="prediction-result" id="predictionResult">還需輸入 5 局後開始預測</div>
-    </div>
+    <label for="bankerCards">莊家牌（例如：10 或 X36）：</label>
+    <input type="text" id="bankerCards" placeholder="輸入莊家牌" maxlength="3"><br>
 
-    <div class="panel">
-        <h2>歷史記錄</h2>
-        <div class="grid-container" id="historyDisplay"></div>
-    </div>
+    <button onclick="calculate()">計算結果</button>
+
+    <div class="result" id="result"></div>
 </div>
 
 <script>
-    let history = [];
-
-    function createEmptyBoard() {
-        let historyGrid = document.getElementById("historyDisplay");
-        historyGrid.innerHTML = "";
-        for (let i = 0; i < 36; i++) {
-            let div = document.createElement("div");
-            div.classList.add("grid-item");
-            historyGrid.appendChild(div);
+    // 將輸入的牌轉換為數字數組
+    function parseCards(input) {
+        const cards = [];
+        for (let char of input) {
+            if (char === 'X') {
+                cards.push(10); // X 代表 10
+            } else if (char === 'J' || char === 'Q' || char === 'K') {
+                cards.push(0); // J、Q、K 定義為 0
+            } else if (!isNaN(char)) {
+                cards.push(parseInt(char)); // 數字直接轉換
+            }
         }
+        return cards;
     }
 
-    function calculateSDS() {
-        let validChars = "123456789XJQK";
-        let playerInput = document.getElementById('player').value.toUpperCase();
-        let bankerInput = document.getElementById('banker').value.toUpperCase();
+    // 計算牌值的函數
+    function calculateCardValue(cards) {
+        let total = 0;
+        for (let card of cards) {
+            if ([1, 3, 5, 7, 9].includes(card)) {
+                total -= card; // 1,3,5,7,9 為負數
+            } else if ([2, 4, 6, 8, 10].includes(card)) {
+                total += card; // 2,4,6,8,10 為正數
+            }
+            // 0（J、Q、K）不影響總和
+        }
+        return total;
+    }
 
-        if (![...playerInput, ...bankerInput].every(char => validChars.includes(char)) || playerInput.length !== 3 || bankerInput.length !== 3) {
-            alert("請輸入有效的牌（1-9, X, J, Q, K）");
+    // 主計算函數
+    function calculate() {
+        const playerInput = document.getElementById('playerCards').value.trim();
+        const bankerInput = document.getElementById('bankerCards').value.trim();
+
+        if (playerInput.length < 2 || playerInput.length > 3 || bankerInput.length < 2 || bankerInput.length > 3) {
+            alert("請輸入正確的牌值（每邊必須是2到3個字符，例如：18 或 12X）！");
             return;
         }
 
-        let convertValue = char => (char === "X" ? 10 : "JQK".includes(char) ? 0 : parseInt(char));
-        let score = [...playerInput, ...bankerInput].reduce((sum, char) => {
-            let value = convertValue(char);
-            return sum + ([1, 3, 5, 7, 9].includes(value) ? -1 : value > 0 ? 1 : 0);
-        }, 0);
+        // 解析輸入的牌
+        const playerCards = parseCards(playerInput);
+        const bankerCards = parseCards(bankerInput);
 
-        let result = score > 0 ? "zhuang" : score < 0 ? "xian" : "heju";
-        history.push(result);
-        updateHistoryDisplay();
+        // 計算閒家和莊家的牌值
+        const playerValue = calculateCardValue(playerCards);
+        const bankerValue = calculateCardValue(bankerCards);
 
-        let remaining = 5 - history.length;
-        document.getElementById("predictionResult").innerText = history.length < 5 ? `還需輸入 ${remaining} 局後開始預測` : `推薦下注: ${result === "zhuang" ? "莊" : result === "xian" ? "閒" : "不下注"}`;
+        // 總牌值
+        const totalValue = playerValue + bankerValue;
+
+        // 顯示結果
+        let resultText = `閒家牌值：${playerValue}<br>莊家牌值：${bankerValue}<br>總牌值：${totalValue}<br>`;
+        if (totalValue > 0) {
+            resultText += "建議：打莊";
+        } else if (totalValue < 0) {
+            resultText += "建議：打閒";
+        } else {
+            resultText += "建議：不下注";
+        }
+
+        document.getElementById('result').innerHTML = resultText;
     }
-
-    function clearAll() {
-        history = [];
-        createEmptyBoard();
-        document.getElementById("predictionResult").innerText = "還需輸入 5 局後開始預測";
-    }
-
-    createEmptyBoard();
 </script>
 
 </body>
